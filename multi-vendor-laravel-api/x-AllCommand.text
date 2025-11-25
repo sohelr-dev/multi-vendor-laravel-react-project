@@ -1,0 +1,88 @@
+all project list 
+1. core css 
+project name = e school
+https://e-school.sohelit.com/
+
+2.core bootstrap
+project name = panda go e-comarce
+https://bs-clone.sohelit.com/
+
+3.css and bootstrap conbain
+project name = bd stall clone
+https://bdstall-clone.sohelit.com/
+
+4.wordpress
+project name = clcikholice ,parpose travelling,plugin start ,commit,to-list ,customization 
+https://sohelit.com/wp/
+
+5.core php 
+project name = eventhub
+https://sohelit.com/eventhub/
+
+6.react 
+project name = rx-power
+
+
+
+
+Install Laravel
+===================
+composer global require laravel/installer
+
+Then create a new project:
+=======================
+laravel new project-name
+
+Using Composer (recommended)
+=======================
+composer create-project laravel/laravel project-name
+
+Generate application key:
+==========================
+php artisan key:generate
+
+Artisan Commands (Most Common):
+================================
+| Command                                      | Description                   |
+| -------------------------------------------- | ----------------------------- |
+| `php artisan serve`                          | Run local server              |
+| `php artisan migrate`                        | Run all migrations            |
+| `php artisan migrate:rollback`               | Undo last migration batch     |
+| `php artisan make:model ModelName -m`        | Create a model and migration  |
+| `php artisan make:controller ControllerName` | Create a new controller       |
+| `php artisan make:seeder SeederName`         | Create a seeder class         |
+| `php artisan db:seed`                        | Run all seeders               |
+| `php artisan route:list`                     | Show all registered routes    |
+| `php artisan config:cache`                   | Cache configuration           |
+| `php artisan cache:clear`                    | Clear cache                   |
+| `php artisan make:middleware Name`           | Create middleware             |
+| `php artisan make:request RequestName`       | Create form request validator |
+
+
+Command to install Bootstrap pagination views:
+===============================================
+php artisan vendor:publish --tag=laravel-pagination
+
+=========================================================
+
+🧱 Optional: Use Bootstrap in your frontend
+
+If you haven’t already included Bootstrap in your layout, install it via npm:
+
+npm install bootstrap
+
+==================================
+Then import it in your resources/js/app.js (or app.scss):
+
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+====================================================
+
+middleware:
+==========================
+php artisan make:middleware MiddlewareName
+
+api:
+==========================
+php artisan install:api
