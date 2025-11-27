@@ -1,0 +1,10 @@
+/* Fix Recharts responsive error */
+.recharts-responsive-container {
+  min-width: 0 !important;
+  min-height: 0 !important;
+}
+/* internal fix */
+.col, [class*='col-'] {
+  min-width: 0 !important;
+}
+
