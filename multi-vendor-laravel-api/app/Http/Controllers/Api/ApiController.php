@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-
+use Illuminate\Support\Facades\DB;
 
 class ApiController extends Controller
 {
@@ -14,7 +14,7 @@ class ApiController extends Controller
         $request->validate([
             'name' => 'required|max:255',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|confirmed'
+            'password' => 'required'
         ]);
         // $user = User::create([
         //     'name' => $request->name,
@@ -34,6 +34,7 @@ class ApiController extends Controller
             'email' => 'required|email',
             'password' => 'required'
         ]);
+
 
         $user = User::where('email', $request->email)->first();
 
@@ -59,7 +60,7 @@ class ApiController extends Controller
         }
     }
 
-    public function logout(){                
+    public function logout(){
         // auth()->user()->currentAccessToken()->delete();
         // $user= auth()->user();
         auth()->user()->tokens()->delete();
@@ -68,4 +69,27 @@ class ApiController extends Controller
             'message' => 'Logout successfully'
         ]);
     }
+    public function index()
+    {
+        $users = DB::table('users as u')
+            ->join('roles as r', 'u.role_id', '=', 'r.id')
+            ->select(
+                'u.id',
+                'u.name',
+                'u.email',
+                'u.created_at',
+                'u.phone',
+                'u.status',
+                'r.name as role_name'
+            )
+            ->orderBy('u.id', 'desc')
+            ->get();   // pagination works with API too
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Users fetched successfully',
+            'data' => $users
+        ], 200);
+    }
+
 }
