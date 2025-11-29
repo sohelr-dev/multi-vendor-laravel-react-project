@@ -4,6 +4,7 @@ import api from "../../../config";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 
+
 function Login() {
   const navigate = useNavigate();
   const { login } = useAuth(); // context login function
@@ -19,22 +20,24 @@ function Login() {
     e.preventDefault();
     setError("");
 
-    api
-      .post("login", user)
-      .then((res) => {
-        // Assuming API returns { user: {...}, token: "..." }
-        const { user: userData, token } = res.data;
+    api.post("login", user)
+    .then((res) => {
+      console.log("Login Response:", res.data);
 
-        // 1️⃣ Save in AuthContext + localStorage
-        login(userData, token);
+      const userData = res.data.data;   // ✔ user info
+      const token = res.data.token;     // ✔ token
 
-        // 2️⃣ Redirect after login
+      if (res.data.success) {
+        login(userData, token);         // ✔ Save to context + localStorage
         navigate("/dashboard");
-      })
-      .catch((err) => {
-        console.log(err);
-        setError(err.response?.data?.message || "Invalid email or password");
-      });
+      } else {
+        setError("Login failed");
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      setError(err.response?.data?.message || "Invalid email or password");
+    });
   };
 
   return (

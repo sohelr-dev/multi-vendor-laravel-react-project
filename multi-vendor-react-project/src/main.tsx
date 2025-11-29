@@ -7,22 +7,26 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Page404 from './components/Page404.tsx'
 import Login from './components/pages/auth/Login.tsx'
 import Dashboard from './components/pages/admin/Dashboard.tsx'
-
+import { AuthProvider } from './context/AuthContext'   // <-- ADD THIS
+import ProtectedRoute from './components/ProtectedRoute.tsx'
+import GuestRoute from './components/GuestRoute.tsx'
 
 
 
 const AppRouter = createBrowserRouter([
-  {path:"/",element:<App/>,
-    children:[
-      {path:"dashboard",element:<Dashboard/>}
+  { path: "/", element: <App />,
+    children: [
+      { path: "dashboard", element:<ProtectedRoute><Dashboard /> </ProtectedRoute> }
     ]
   },
-  {path:"/login",element:<Login/>},
-  {path:"/*",element:<Page404/>},
+  { path: "/login", element: <GuestRoute><Login /></GuestRoute> },
+  { path: "/*", element: <Page404 /> },
 ])
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={AppRouter} />
+    <AuthProvider>          {/* <-- WRAP HERE */}
+       <RouterProvider router={AppRouter} />
+    </AuthProvider>
   </StrictMode>,
 )
