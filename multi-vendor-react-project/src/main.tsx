@@ -12,6 +12,9 @@ import ProtectedRoute from './components/ProtectedRoute.tsx'
 import GuestRoute from './components/GuestRoute.tsx'
 import UserList from './components/pages/admin/users/UserList.tsx'
 import UserDetails from './components/pages/admin/users/UserDetails.tsx'
+import VendorRequestList from './components/pages/admin/vendor-request/VendorRequestList.tsx'
+import VendorDetails from './components/pages/admin/vendor-request/VendorRequestDetails.tsx'
+import VendorsInfo from './components/pages/admin/vendors/VendorsInfo.tsx'
 
 
 
@@ -21,6 +24,10 @@ const AppRouter = createBrowserRouter([
       { path: "dashboard", element:<ProtectedRoute><Dashboard /> </ProtectedRoute> },
       { path: "users", element:<ProtectedRoute><UserList /> </ProtectedRoute> },
       { path: "users/user-details/:id", element:<ProtectedRoute><UserDetails /> </ProtectedRoute> },
+      // vendor request
+      { path: "Vendor-requests", element:<ProtectedRoute><VendorRequestList /> </ProtectedRoute> },
+      { path: "Vendor-requests/:id", element:<ProtectedRoute><VendorDetails /> </ProtectedRoute> },
+      { path: "vendors", element:<ProtectedRoute><VendorsInfo /> </ProtectedRoute> },
     ]
   },
   { path: "/login", element: <GuestRoute><Login /></GuestRoute> },
