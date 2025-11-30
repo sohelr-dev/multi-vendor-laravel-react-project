@@ -36,11 +36,20 @@ class ApiController extends Controller
         ]);
 
 
-        $user = User::where('email', $request->email)->first();
-
+        $user = User::where('email', $request->email)->select('role_id','id','email','password')->first();
+        
         if ($user) {
             if(Hash::check($request->password, $user->password)){
-                $token = $user->createToken('api')->plainTextToken;
+                $roleId = $user->role_id;
+                if($roleId === 1){
+                    $token = $user->createToken('admin')->plainTextToken;
+                }elseif($roleId===2){
+                    $token = $user->createToken('vendor')->plainTextToken;
+                }elseif($roleId===3){
+                    $token = $user->createToken('customer')->plainTextToken;
+                }elseif($roleId===4){
+                    $token = $user->createToken('delivery_staff')->plainTextToken;
+                }
                 return response()->json([
                     'success' => true,
                     'data' => $user,

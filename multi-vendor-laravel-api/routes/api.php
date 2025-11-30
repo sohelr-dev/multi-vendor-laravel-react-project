@@ -16,5 +16,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [ApiController::class, 'logout']);
     Route::get('/users', [UserController::class, 'index']);
     Route::delete('/user/delete/{id}', [UserController::class, 'destroy']);
+    Route::get('/user/details/{id}', [UserController::class, 'show']);
     // Route::apiResource('roles', UserController::class);
 });

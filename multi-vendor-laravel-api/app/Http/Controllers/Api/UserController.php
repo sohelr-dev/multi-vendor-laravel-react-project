@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    // সকল ইউজার পেজিনেশনসহ নেয়ার জন্য
+    
     public function index()
     {
         $users = DB::table('users as u')
@@ -66,12 +66,12 @@ class UserController extends Controller
         }
 
         return response()->json([
-            'data' => $user,
-            'message' => 'User fetched successfully',
+            'user' => $user,
+            'message' => 'User details fetched successfully ',
         ]);
     }
 
-    // ইউজার ডিলিট করার জন্য
+  
     public function destroy($id)
     {
         $delete = DB::table('users')
@@ -89,7 +89,7 @@ class UserController extends Controller
         }
     }
 
-    // নতুন ইউজার তৈরি করার জন্য
+    
     public function store(Request $request)
     {
         $request->validate([
@@ -119,7 +119,7 @@ class UserController extends Controller
             'role_id' => $request->input('role_id'),
             'status' => $request->input('status'),
             'phone' => $request->input('phone'),
-            'password' => Hash::make($request->input('password')), // পাসওয়ার্ড এনক্রিপ্ট করা
+            'password' => Hash::make($request->input('password')), 
             'photo' => $imageName,
         ]);
 
@@ -129,7 +129,7 @@ class UserController extends Controller
         ], 201);
     }
 
-    // ইউজার আপডেট করার জন্য
+    
     public function update(Request $request, $id)
     {
         $user = User::find($id);
