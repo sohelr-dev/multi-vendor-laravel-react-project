@@ -156,7 +156,7 @@ function UserList() {
                         )}
                       </td>
                       <td className="text-center d-flex gap-2">
-                        <Link to={`/user/details-user/${item.id}`} className="btn" style={{ backgroundColor: "#185a64", color: "white", border: "none" }}>
+                        <Link to={`/users/user-details/${item.id}`} className="btn" style={{ backgroundColor: "#185a64", color: "white", border: "none" }}>
                           <i className="fa-solid fa-eye"></i>
                         </Link>
                         <Link to={`/user/edit/${item.id}`} className="btn" style={{ backgroundColor: "#0d6efd", color: "white", border: "none" }}>

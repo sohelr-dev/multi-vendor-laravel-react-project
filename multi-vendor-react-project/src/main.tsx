@@ -11,6 +11,7 @@ import { AuthProvider } from './context/AuthContext'   // <-- ADD THIS
 import ProtectedRoute from './components/ProtectedRoute.tsx'
 import GuestRoute from './components/GuestRoute.tsx'
 import UserList from './components/pages/admin/users/UserList.tsx'
+import UserDetails from './components/pages/admin/users/UserDetails.tsx'
 
 
 
@@ -19,6 +20,7 @@ const AppRouter = createBrowserRouter([
     children: [
       { path: "dashboard", element:<ProtectedRoute><Dashboard /> </ProtectedRoute> },
       { path: "users", element:<ProtectedRoute><UserList /> </ProtectedRoute> },
+      { path: "users/user-details/:id", element:<ProtectedRoute><UserDetails /> </ProtectedRoute> },
     ]
   },
   { path: "/login", element: <GuestRoute><Login /></GuestRoute> },
