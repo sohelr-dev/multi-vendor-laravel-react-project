@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useAuth } from "./context/AuthContext";
 
 
 //server
@@ -7,6 +8,8 @@ import axios from "axios";
 // const baseUrl ="https://sohelit.com/rx-power-api/";
 
 //local
+const token = localStorage.getItem('token');
+
 
 
 
@@ -20,7 +23,7 @@ const api = axios.create({
     headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        
+        Authorization:`Bearer ${token}`
         
     }
 });

@@ -10,13 +10,15 @@ import Dashboard from './components/pages/admin/Dashboard.tsx'
 import { AuthProvider } from './context/AuthContext'   // <-- ADD THIS
 import ProtectedRoute from './components/ProtectedRoute.tsx'
 import GuestRoute from './components/GuestRoute.tsx'
+import UserList from './components/pages/admin/users/UserList.tsx'
 
 
 
 const AppRouter = createBrowserRouter([
   { path: "/", element: <App />,
     children: [
-      { path: "dashboard", element:<ProtectedRoute><Dashboard /> </ProtectedRoute> }
+      { path: "dashboard", element:<ProtectedRoute><Dashboard /> </ProtectedRoute> },
+      { path: "users", element:<ProtectedRoute><UserList /> </ProtectedRoute> },
     ]
   },
   { path: "/login", element: <GuestRoute><Login /></GuestRoute> },

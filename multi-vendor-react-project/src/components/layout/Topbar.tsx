@@ -11,7 +11,7 @@ function Topbar() {
           <i className="fa-solid fa-bars-staggered fa-fade fa-lg"></i>
         </label>
         {/* search bar */}
-        <div>
+        <div >
           <form className="d-flex flex-grow-1 me-3" role="search">
             <input
               className="form-control form-control-md me-2"
