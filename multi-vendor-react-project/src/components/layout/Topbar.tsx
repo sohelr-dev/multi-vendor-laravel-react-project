@@ -2,6 +2,7 @@ import Profile from "../../assets/img/sohel.jpg";
 
 function Topbar() {
   return (
+    <div className="container-fluid">
     <nav className="navbar bg-dark bg-opacity-10 p-2">
       <div className="container-fluid d-flex align-items-center flex-nowrap">
         <label
@@ -114,6 +115,8 @@ function Topbar() {
         </div>
       </div>
     </nav>
+
+    </div>
   );
 }
 

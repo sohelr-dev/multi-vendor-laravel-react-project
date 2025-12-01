@@ -17,6 +17,7 @@ import VendorDetails from './components/pages/admin/vendor-request/VendorRequest
 import VendorsInfo from './components/pages/admin/vendors/VendorsInfo.tsx'
 import ProductList from './components/pages/admin/products/ProductList.tsx'
 import ProductDetails from './components/pages/admin/products/ProductDetails.tsx'
+import CreateProduct from './components/pages/admin/products/CreateProduct.tsx'
 
 
 
@@ -32,6 +33,7 @@ const AppRouter = createBrowserRouter([
       { path: "vendors", element:<ProtectedRoute><VendorsInfo /> </ProtectedRoute> },
       //product
       { path: "products", element:<ProtectedRoute><ProductList /> </ProtectedRoute> },
+      { path: "products/create", element:<ProtectedRoute><CreateProduct /> </ProtectedRoute> },
       { path: "product/:id", element:<ProtectedRoute><ProductDetails /> </ProtectedRoute> },
 
     ]

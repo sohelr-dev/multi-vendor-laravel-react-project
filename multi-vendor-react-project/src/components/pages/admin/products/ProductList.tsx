@@ -156,7 +156,7 @@ function ProductList() {
                       <td className="text-muted">{item.sku}</td>
 
                       <td>
-                        <span className="fw-bold text-success">৳{(item.price-item.discount_price||0) ?? item.price}</span>
+                        <span className="fw-bold text-success">৳{item.discount_price ? item.price - item.discount_price : item.price}</span>
                         {item.discount_price && (
                           <small className="text-decoration-line-through text-muted">
                             ৳{item.price}

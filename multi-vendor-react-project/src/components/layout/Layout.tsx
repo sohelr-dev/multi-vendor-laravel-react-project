@@ -8,7 +8,7 @@ function Layout() {
     <>
       <div className="d-flex">
         <Sidebar />
-        <div className="main w-100">
+        <div className="main w-100 ">
           <Topbar />
           <div className="container mt-4">
             <Outlet />
