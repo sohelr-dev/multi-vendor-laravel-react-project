@@ -1,0 +1,31 @@
+ @media print {
+        body * {
+            visibility: hidden;
+        }
+
+        #printArea,
+        #printArea * {
+            visibility: visible;
+        }
+
+        #printArea {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+        }
+
+        .btn,
+        .search-bar,
+        .pagination {
+            display: none !important;
+        }
+
+        .no-print {
+            display: none !important;
+        }
+    }
+
+    .content {
+        padding: 0 !important;
+    }

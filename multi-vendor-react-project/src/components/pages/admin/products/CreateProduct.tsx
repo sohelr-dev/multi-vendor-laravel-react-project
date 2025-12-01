@@ -1,14 +1,45 @@
-import { useState, useEffect } from "react";
-import api from "../../../../config"; 
+import { useState, useEffect, type ChangeEvent,type FormEvent } from "react";
+import api from "../../../../config";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { useNavigate } from "react-router-dom";
+
+// Type definitions
+type Variant = {
+  variant_type: string;
+  variant_name: string;
+  additional_price: number;
+  variant_stock: number;
+};
+
+type ProductForm = {
+  name: string;
+  slug: string;
+  sku: string;
+  category_id: string;
+  brand_id: string;
+  vendor_id: string;
+  price: string;
+  discount_price: string;
+  quantity: string;
+  unit: string;
+  status: string;
+  short_description: string;
+  description: string;
+  thumbnail: File | null;
+  images: File[];
+  variants: Variant[];
+};
+
+type ErrorObject = { [key: string]: string[] };
 
 const CreateProduct = () => {
   const [loading, setLoading] = useState(true);
-  const [categories, setCategories] = useState([]);
-  const [brands, setBrands] = useState([]);
-  const [vendors, setVendors] = useState([]);
-  const [form, setForm] = useState({
+  const [categories, setCategories] = useState<any[]>([]);
+  const [brands, setBrands] = useState<any[]>([]);
+  const [vendors, setVendors] = useState<any[]>([]);
+  const navigate = useNavigate();
+  const [form, setForm] = useState<ProductForm>({
     name: "",
     slug: "",
     sku: "",
@@ -26,15 +57,15 @@ const CreateProduct = () => {
     images: [],
     variants: [],
   });
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<ErrorObject>({});
 
   // Fetch categories, brands, vendors
   useEffect(() => {
+    document.title='Create Product';
     api
       .get("get-product")
       .then((res) => {
-        if (res.data.status==='success') {
-          console.log(res.data);
+        if (res.data.status === "success") {
           setCategories(res.data.categories);
           setBrands(res.data.brands);
           setVendors(res.data.vendors);
@@ -47,7 +78,7 @@ const CreateProduct = () => {
   }, []);
 
   // Handle input change
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
 
@@ -59,8 +90,10 @@ const CreateProduct = () => {
   };
 
   // Handle file inputs
-  const handleFileChange = (e) => {
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, files } = e.target;
+    if (!files) return;
+
     if (name === "thumbnail") {
       setForm((prev) => ({ ...prev, thumbnail: files[0] }));
     } else if (name === "images") {
@@ -69,7 +102,7 @@ const CreateProduct = () => {
   };
 
   // Handle CKEditor change
-  const handleDescriptionChange = (event, editor) => {
+  const handleDescriptionChange = (_event: any, editor: any) => {
     const data = editor.getData();
     setForm((prev) => ({ ...prev, description: data }));
   };
@@ -78,21 +111,18 @@ const CreateProduct = () => {
   const addVariant = () => {
     setForm((prev) => ({
       ...prev,
-      variants: [
-        ...prev.variants,
-        { variant_type: "", variant_name: "", additional_price: 0, variant_stock: 0 },
-      ],
+      variants: [...prev.variants, { variant_type: "", variant_name: "", additional_price: 0, variant_stock: 0 }],
     }));
   };
 
-  const removeVariant = (index) => {
+  const removeVariant = (index: number) => {
     setForm((prev) => ({
       ...prev,
       variants: prev.variants.filter((_, i) => i !== index),
     }));
   };
 
-  const handleVariantChange = (index, field, value) => {
+  const handleVariantChange = (index: number, field: keyof Variant, value: string | number) => {
     setForm((prev) => ({
       ...prev,
       variants: prev.variants.map((v, i) => (i === index ? { ...v, [field]: value } : v)),
@@ -100,7 +130,7 @@ const CreateProduct = () => {
   };
 
   // Submit form
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setErrors({}); // Clear previous errors
 
@@ -114,11 +144,11 @@ const CreateProduct = () => {
         form.variants.forEach((v) => {
           data.append("variant_type[]", v.variant_type);
           data.append("variant_name[]", v.variant_name);
-          data.append("additional_price[]", v.additional_price);
-          data.append("variant_stock[]", v.variant_stock);
+          data.append("additional_price[]", v.additional_price.toString());
+          data.append("variant_stock[]", v.variant_stock.toString());
         });
       } else {
-        data.append(key, form[key]);
+        data.append(key, (form as any)[key]);
       }
     }
 
@@ -127,9 +157,9 @@ const CreateProduct = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      if (res.data.status ==='success') {
+      if (res.data.status === "success") {
         alert("Product created successfully!");
-        // Optionally reset form
+        navigate('/products');
         setForm({
           name: "",
           slug: "",
@@ -151,19 +181,19 @@ const CreateProduct = () => {
       } else {
         alert("Failed to create product");
       }
-    }  catch (err) {
-  if (err.response) {
-    console.error("Validation errors:", err.response.data);
-    if (err.response.status === 422) {
-      setErrors(err.response.data.errors);
-    } else {
-      alert("Error creating product");
+    } catch (err: any) {
+      if (err.response) {
+        console.error("Validation errors:", err.response.data);
+        if (err.response.status === 422) {
+          setErrors(err.response.data.errors);
+        } else {
+          alert("Error creating product");
+        }
+      } else {
+        console.error(err);
+        alert("Unexpected error occurred");
+      }
     }
-  } else {
-    console.error(err);
-    alert("Unexpected error occurred");
-  }
-}
   };
 
   if (loading) return <p>Loading...</p>;

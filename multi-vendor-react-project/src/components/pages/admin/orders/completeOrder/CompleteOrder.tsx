@@ -1,0 +1,160 @@
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import api from "../../../../../config";
+
+interface Order {
+  order_id: number;
+  order_number: string;
+  customer_name: string;
+  vendor_shop_name: string;
+  vendor_name: string;
+  total: number;
+  created_at: string;
+  order_status: string;
+}
+
+const CompleteOrders: React.FC = () => {
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [alert, setAlert] = useState<{ type: "success" | "danger"; message: string } | null>(null);
+
+  useEffect(() => {
+    document.title = "Completed Orders";
+    fetchOrders();
+  }, []);
+
+  const fetchOrders = async (query = "") => {
+    setLoading(true);
+    try {
+      const res = await api.get(`orders/complete`);
+      console.log(res.data);
+      setOrders(res.data.data || []);
+    } catch (err) {
+      console.error("Failed to fetch orders", err);
+      setAlert({ type: "danger", message: "Failed to load completed orders" });
+      setTimeout(() => setAlert(null), 3000);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getBadgeClass = (status: string) => {
+    switch (status) {
+      case "delivered":
+        return "bg-success text-white";
+      case "completed":
+        return "bg-success text-white";
+      case "cancelled":
+        return "bg-danger text-white";
+      default:
+        return "bg-light text-dark";
+    }
+  };
+
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    fetchOrders(search);
+  };
+
+  return (
+    <div className="container-fluid py-4">
+      {/* Alert */}
+      {alert && (
+        <div className={`alert alert-${alert.type} position-fixed top-0 end-0 m-3`} role="alert" style={{ zIndex: 9999 }}>
+          {alert.message}
+        </div>
+      )}
+
+      <div className="row justify-content-center">
+        <div className="col-lg-11 col-md-12">
+          <div className="card">
+            <div className="card-header d-flex justify-content-between align-items-center">
+              <h4 className="mb-0"><i className="fa-solid fa-check-circle me-2"></i>Completed Orders</h4>
+
+              <form className="d-flex" style={{ maxWidth: "300px" }} onSubmit={handleSearch}>
+                <input
+                  className="form-control form-control-sm me-2"
+                  type="search"
+                  placeholder="Search completed orders..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+                <button className="btn btn-light btn-sm" type="submit">
+                  <i className="fa-solid fa-search"></i>
+                </button>
+              </form>
+            </div>
+
+            <div className="card-body p-0">
+              <div className="table-responsive">
+                <table className="table table-hover align-middle mb-0">
+                  <thead className="sticky-top table-success">
+                    <tr>
+                      <th>#ID</th>
+                      <th>Order No</th>
+                      <th>Customer</th>
+                      <th>Shop</th>
+                      <th>Vendor</th>
+                      <th>Total</th>
+                      <th>Date</th>
+                      <th>Status</th>
+                      <th className="text-end">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {loading ? (
+                      <tr>
+                        <td colSpan={9} className="text-center py-4">
+                          <div className="spinner-border text-success" style={{ width: "3rem", height: "3rem" }}></div>
+                        </td>
+                      </tr>
+                    ) : orders.length > 0 ? (
+                      orders.map((order) => (
+                        <tr key={order.order_id}>
+                          <td>{order.order_id}</td>
+                          <td>{order.order_number}</td>
+                          <td>{order.customer_name || "N/A"}</td>
+                          <td>{order.vendor_shop_name || "N/A"}</td>
+                          <td>{order.vendor_name || "N/A"}</td>
+                          <td>{order.total} ৳</td>
+                          <td>{new Date(order.created_at).toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" })}</td>
+
+                          {/* Status Badge */}
+                          <td className="text-center">
+                            <span className={`badge ${getBadgeClass(order.order_status)}`}>
+                              {order.order_status.charAt(0).toUpperCase() + order.order_status.slice(1)}
+                            </span>
+                          </td>
+
+                          <td className="text-end">
+                            <Link to={`/orders/${order.order_id}`} className="btn btn-sm btn-outline-info">
+                              <i className="fa-solid fa-eye"></i> View
+                            </Link>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={9} className="text-center py-4 text-muted">
+                          No completed orders found.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Pagination (Optional) */}
+            {/* <div className="card-footer text-center">
+              Pagination buttons here
+            </div> */}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CompleteOrders;

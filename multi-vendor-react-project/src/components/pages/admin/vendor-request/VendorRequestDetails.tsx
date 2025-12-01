@@ -126,6 +126,7 @@ function VendorDetails() {
             />
           ) : (
             <div
+            
               className="bg-secondary-subtle text-center py-5 text-muted fw-bold"
               style={{ height: 260 }}
             >

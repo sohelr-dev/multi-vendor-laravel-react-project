@@ -24,11 +24,11 @@ function Login() {
     .then((res) => {
       console.log("Login Response:", res.data);
 
-      const userData = res.data.data;   // ✔ user info
-      const token = res.data.token;     // ✔ token
+      const userData = res.data.data;  
+      const token = res.data.token; 
 
       if (res.data.success) {
-        login(userData, token);         // ✔ Save to context + localStorage
+        login(userData, token);         
         navigate("/dashboard");
       } else {
         setError("Login failed");

@@ -194,7 +194,7 @@ function Sidebar() {
                 <div className="collapse" id="ordersMenu" data-bs-parent=".sidebar-menu">
                   <ul className="list-unstyled ps-4">
                     <li>
-                      <Link to="/admin/orders/all" className="nav-link text-white">
+                      <Link to="/admin/orders" className="nav-link text-white">
                         <i className="fas fa-list me-2"></i> All Orders
                       </Link>
                     </li>
