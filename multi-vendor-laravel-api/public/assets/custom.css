@@ -1,0 +1,57 @@
+.main{
+     margin-left: 280px;
+}
+@media screen and (max-width: 768px) {
+     .main{
+          margin-left: 0px;
+     }
+     
+}
+
+/* dashboard card hover */
+.card-hover {
+  transition: all 0.3s ease-in-out;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(25, 0, 0, 0.1);
+}
+
+/* 404 page  */
+
+.pageNotFound{
+     display: block;
+     justify-content: center;
+     align-items: center;
+     margin-top: 250px;
+     text-align: center;
+}
+.pageNotFound h1{
+     font-weight: 900;
+     font-size: 5rem;
+}
+.pageNotFound .number{
+     font-weight: bolder;
+     font-size: 8rem;
+}
+/* @media (min-width: 576px) {
+    .container, .container-sm {
+        width: 100% !important;
+    }
+} */
+
+/* @media (min-width: 576px) {
+    .container, .container-sm {
+        min-width: 100% !important;
+    }
+} */
+.breadcrumb-item Link:hover, .breadcrumb-item Link:focus {
+  color: #0aca27; /* darker primary blue */
+  text-decoration: underline;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+  background-color: #0a58ca;
+  border-color: #0a58ca;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.5);
+}

@@ -29,6 +29,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('products', [ProductController::class, 'index']);
     Route::get('products/search', [ProductController::class, 'search']);
     Route::get('products/{id}', [ProductController::class, 'show']);
-    Route::post('products', [ProductController::class, 'store']);
+    //for admin
+    Route::get('get-product', [ProductController::class, 'getCreateProduct']);
+    Route::post('products', [ProductController::class, 'storeProduct']);
     Route::post('products/{id}/status', [ProductController::class, 'updateStatus']);
 });

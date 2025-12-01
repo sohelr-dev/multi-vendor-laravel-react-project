@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -95,79 +96,149 @@ class ProductController extends Controller
         ]);
     }
 
-
-    public function store(Request $request)
+    public function getCreateProduct()
     {
-        // Auto slug
-        $slug = $request->slug
-            ? strtolower(str_replace(' ', '-', $request->slug))
-            : strtolower(str_replace(' ', '-', $request->name));
+       
+        $categories = DB::table('categories')->get();
+        $brands = DB::table('brands')->get();
 
-        $request->merge(['slug' => $slug]);
+        
+        if (Auth::user()->role_id != 1) {
+            $vendor = DB::table('vendors')
+                ->where('user_id', Auth::user()->id)
+                ->first();
 
-        // Upload thumbnail
-        if ($request->hasFile('thumbnail')) {
-            $file = $request->file('thumbnail');
-            $fileName = time().'_'.$file->getClientOriginalName();
-            $file->move(public_path('images/product_thumbnail'), $fileName);
-            $request->merge(['thumbnail' => 'images/product_thumbnail/'.$fileName]);
+            return response()->json([
+                'status' => 'success',
+                'categories' => $categories,
+                'brands' => $brands,
+                'vendor' => $vendor
+            ]);
         }
 
-        // Status for vendor/admin
-        $status = Auth::user()->role_id != 1 ? 'pending' : ($request->status ?: 'active');
+     
+        $vendors = DB::table('vendors')
+            ->join('users as u', 'vendors.user_id', '=', 'u.id')
+            ->select('vendors.*', 'u.name as vendorName')
+            ->get();
 
-        // Insert
+        return response()->json([
+            'status' => 'success',
+            'categories' => $categories,
+            'brands' => $brands,
+            'vendors' => $vendors
+        ]);
+    }
+
+
+
+    public function storeProduct(Request $request)
+    {
+        // Validate request data
+        $validator = Validator::make($request->all(),[
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|integer',
+            'brand_id' => 'required|integer',
+            'vendor_id' => 'nullable|integer',
+            'price' => 'required|numeric',
+            'discount_price' => 'nullable|numeric',
+            'quantity' => 'required|integer',
+            'unit' => 'nullable|string|max:50',
+            'short_description' => 'nullable|string',
+            'description' => 'nullable|string',
+            'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png|max:5048',
+            'images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:5048',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        // Generate slug if not provided
+        if (!$request->input('slug')) {
+            $slug = strtolower(str_replace(' ', '-', $request->input('name')));
+            $request->merge(['slug' => $slug]);
+        } else {
+            $slug = strtolower(str_replace(' ', '-', $request->input('slug')));
+            $request->merge(['slug' => $slug]);
+        }
+
+        // Handle thumbnail upload
+        if ($request->hasFile('thumbnail')) {
+            $file = $request->file('thumbnail');
+            $ext = $file->getClientOriginalExtension();
+            $name = preg_replace('/[^A-Za-z0-9_\-]/', '_', strtolower($request->name));
+            $fileName = $name . '_' . time() . '.' . $ext;
+            $file->move(public_path('images/product_thumbnail'), $fileName);
+            $request->merge(['thumbnail' => 'images/product_thumbnail/' . $fileName]);
+        }
+
+        // Determine product status
+        $status = (Auth::user()->role_id != 1) ? 'pending' : ($request->input('status') ?: 'active');
+
+        // Insert product
         $productId = DB::table('products')->insertGetId([
-            'vendor_id' => $request->vendor_id,
-            'category_id' => $request->category_id,
-            'brand_id' => $request->brand_id,
-            'name' => $request->name,
-            'slug' => $request->slug,
+            'vendor_id' => $request->input('vendor_id'),
+            'category_id' => $request->input('category_id'),
+            'brand_id' => $request->input('brand_id'),
+            'name' => $request->input('name'),
+            'slug' => $request->input('slug'),
             'status' => $status,
-            'sku' => $request->sku,
-            'price' => $request->price,
-            'discount_price' => $request->discount_price,
-            'quantity' => $request->quantity,
-            'unit' => $request->unit,
-            'short_description' => $request->short_description,
-            'description' => $request->description,
-            'thumbnail' => $request->thumbnail,
+            'sku' => $request->input('sku'),
+            'price' => $request->input('price'),
+            'discount_price' => $request->input('discount_price') ?: null,
+            'quantity' => $request->input('quantity'),
+            'unit' => $request->input('unit'),
+            'short_description' => $request->input('short_description'),
+            'description' => $request->input('description'),
+            'thumbnail' => $request->input('thumbnail'),
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-        // Upload multiple images
+        // Handle multiple images
         if ($request->hasFile('images')) {
-            foreach ($request->images as $img) {
-                $imageName = time().'_'.rand(1000,9999).'.'.$img->getClientOriginalExtension();
-                $img->move(public_path('images/product_images'), $imageName);
+            foreach ($request->file('images') as $image) {
+                $imageName = preg_replace('/[^A-Za-z0-9_\-]/', '_', strtolower($request->name))
+                            . '_' . time()
+                            . '_' . rand(1000,9999)
+                            . '.' . $image->getClientOriginalExtension();
+                $imagePath = 'images/product_images/' . $imageName;
+                $image->move(public_path('images/product_images'), $imageName);
 
                 DB::table('product_images')->insert([
                     'product_id' => $productId,
-                    'image' => 'images/product_images/'.$imageName
+                    'image' => $imagePath,
                 ]);
             }
         }
 
-        // Insert variants
-        if ($request->variant_name) {
+        // Handle product variants
+        if ($request->filled('variant_name')) {
+            $variants = [];
             foreach ($request->variant_name as $index => $name) {
-                DB::table('product_variants')->insert([
+                $variants[] = [
                     'product_id' => $productId,
                     'variant_name' => $name,
                     'variant_type' => $request->variant_type[$index] ?? 'Color',
                     'additional_price' => $request->additional_price[$index] ?? 0,
                     'stock' => $request->variant_stock[$index] ?? 0,
-                ]);
+                ];
             }
+            DB::table('product_variants')->insert($variants);
         }
 
+        // Return success response
         return response()->json([
-            'success' => true,
-            'message' => 'Product created successfully',
+            'status' => 'success',
+            'message' => 'Product created successfully.',
             'product_id' => $productId
         ]);
     }
+
 
 
     public function updateStatus(Request $request, $id)

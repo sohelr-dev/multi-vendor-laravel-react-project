@@ -86,3 +86,12 @@ php artisan make:middleware MiddlewareName
 api:
 ==========================
 php artisan install:api
+
+
+Classic editor install
+==============================
+npm install --save @ckeditor/ckeditor5-react @ckeditor/ckeditor5-build-classic
+
+for typescript
+================
+npm install --save-dev @types/ckeditor__ckeditor5-react
