@@ -15,6 +15,8 @@ import UserDetails from './components/pages/admin/users/UserDetails.tsx'
 import VendorRequestList from './components/pages/admin/vendor-request/VendorRequestList.tsx'
 import VendorDetails from './components/pages/admin/vendor-request/VendorRequestDetails.tsx'
 import VendorsInfo from './components/pages/admin/vendors/VendorsInfo.tsx'
+import ProductList from './components/pages/admin/products/ProductList.tsx'
+import ProductDetails from './components/pages/admin/products/ProductDetails.tsx'
 
 
 
@@ -28,6 +30,10 @@ const AppRouter = createBrowserRouter([
       { path: "Vendor-requests", element:<ProtectedRoute><VendorRequestList /> </ProtectedRoute> },
       { path: "Vendor-requests/:id", element:<ProtectedRoute><VendorDetails /> </ProtectedRoute> },
       { path: "vendors", element:<ProtectedRoute><VendorsInfo /> </ProtectedRoute> },
+      //product
+      { path: "products", element:<ProtectedRoute><ProductList /> </ProtectedRoute> },
+      { path: "product/:id", element:<ProtectedRoute><ProductDetails /> </ProtectedRoute> },
+
     ]
   },
   { path: "/login", element: <GuestRoute><Login /></GuestRoute> },
@@ -36,7 +42,7 @@ const AppRouter = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <AuthProvider>          {/* <-- WRAP HERE */}
+    <AuthProvider>          
        <RouterProvider router={AppRouter} />
     </AuthProvider>
   </StrictMode>,

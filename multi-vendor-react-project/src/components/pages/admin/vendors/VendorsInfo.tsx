@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../../../config';
+import { Link } from 'react-router-dom';
 
 function VendorsInfo() {
   const [data, setData] = useState(null);
@@ -39,7 +40,7 @@ function VendorsInfo() {
 
           return (
             <div key={index} className="col-6 col-md-3 mb-3">
-              <div className={`card text-center text-white bg-${bgColor} shadow-sm`}>
+              <div className={`card card-hover text-center text-white bg-${bgColor} shadow`}>
                 <div className="card-body">
                   <h5 className="card-title text-capitalize">{status.status}</h5>
                   <p className="card-text display-6">{status.total}</p>
@@ -73,7 +74,7 @@ function VendorsInfo() {
                 {data.approved_vendors.map((vendor, index) => (
                   <tr key={vendor.id}>
                     <td>{index + 1}</td>
-                    <td>{vendor.vendor_name}</td>
+                    <td><Link to={`/vendor-requests/${vendor.id}`} >{vendor.vendor_name}</Link></td>
                     <td>{vendor.vendor_email}</td>
                     <td>{vendor.vendor_phone}</td>
                     <td>{vendor.id}</td>
