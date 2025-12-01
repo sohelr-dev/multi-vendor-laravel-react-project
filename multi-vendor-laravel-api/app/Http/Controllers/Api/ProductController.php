@@ -98,11 +98,11 @@ class ProductController extends Controller
 
     public function getCreateProduct()
     {
-       
+
         $categories = DB::table('categories')->get();
         $brands = DB::table('brands')->get();
 
-        
+
         if (Auth::user()->role_id != 1) {
             $vendor = DB::table('vendors')
                 ->where('user_id', Auth::user()->id)
@@ -116,7 +116,7 @@ class ProductController extends Controller
             ]);
         }
 
-     
+
         $vendors = DB::table('vendors')
             ->join('users as u', 'vendors.user_id', '=', 'u.id')
             ->select('vendors.*', 'u.name as vendorName')
@@ -146,8 +146,9 @@ class ProductController extends Controller
             'unit' => 'nullable|string|max:50',
             'short_description' => 'nullable|string',
             'description' => 'nullable|string',
-            'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png|max:5048',
-            'images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:5048',
+            'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png,gif,bmp,svg,webp|max:5048',
+            'images.*' => 'nullable|image|mimes:jpg,jpeg,png,gif,bmp,svg,webp|max:5048',
+
         ]);
 
         if ($validator->fails()) {

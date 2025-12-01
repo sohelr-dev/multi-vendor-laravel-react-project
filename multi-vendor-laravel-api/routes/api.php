@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\VendorRequestController;
@@ -33,4 +34,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('get-product', [ProductController::class, 'getCreateProduct']);
     Route::post('products', [ProductController::class, 'storeProduct']);
     Route::post('products/{id}/status', [ProductController::class, 'updateStatus']);
+
+    //orders
+    Route::get('orders', [OrderController::class, 'allOrders']);
+    Route::get('orders/pending', [OrderController::class, 'pendingOrders']);
+    Route::get('orders/complete', [OrderController::class, 'completedOrders']);
+    Route::post('orders/{id}/update-status', [OrderController::class, 'updateStatus']);
+    Route::get('orders/{id}', [OrderController::class, 'show']);
+    Route::get('orders/search', [ProductController::class, 'search']);
+
 });
