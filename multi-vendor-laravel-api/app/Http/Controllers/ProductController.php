@@ -45,34 +45,7 @@ class ProductController extends Controller
         return view('vendors.pages.products.index', compact('products'));
     }
 
-    //this method is commented out to avoid confusion as it is not currently in use
-    // public function show($id){
-    //     $product = DB::table('products as p')
-    //                 ->join('vendors as v', 'p.vendor_id','=','v.id')
-    //                 ->join("users as u",'u.id','=','v.user_id')
-    //                 ->join("categories as c",'c.id','=','p.category_id')
-    //                 ->join("brands as b",'b.id','=','p.brand_id')
-    //                 ->join("product_images as pimg",'pimg.product_id','=','p.id')
-    //                 ->join("product_variants as pv",'pv.product_id','=','p.id')
-    //                 ->select('p.*',
-    //                     'u.name as vendorName','u.email as vendorEmail','u.phone as vendorPhone',
-    //                     'v.shop_name as vendorShopName','v.address as vendorAddress','v.logo as vendorLogo',
-    //                     'c.name as categoryName','c.slug as categorySlug','c.icon as categoryIcon',
-    //                     'b.name as brandName','b.slug as brandSlug','b.logo as brandLogo',
-    //                     'pimg.image as productImage',
-    //                     'pv.id as variantId','pv.variant_name as variantName','pv.variant_type as variantType','pv.additional_price as additionalPrice','pv.stock as variantStock'
-
-    //                     )
-    //                 ->where('p.id', $id)
-    //                 ->first();
-    //                 dd($product);
-
-    //     if (!$product) {
-    //         abort(404);
-    //     }
-    //     return view('vendors.pages.products.show', compact('product'));
-
-    // }
+    
 
     public function show($id)
     {
@@ -145,7 +118,7 @@ class ProductController extends Controller
         //     'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         //     'images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         // ]);
-        
+
         if($request->input('slug') == null){
             $slug = strtolower(str_replace(' ', '-', $request->input('name')));
             $request->merge(['slug' => $slug]);
@@ -154,11 +127,11 @@ class ProductController extends Controller
                 $request->merge(['slug' => $slug]);
         }
         // dd($name);
-        
+
 
         if ($request->hasFile('thumbnail')) {
             $file = $request->file('thumbnail');
-            $ext = $file->getClientOriginalExtension(); 
+            $ext = $file->getClientOriginalExtension();
             $name = preg_replace('/[^A-Za-z0-9_\-]/', '_', strtolower($request->name));
             $fileName = $name . '_' . time() . '.' . $ext;
             $file->move(public_path('images/product_thumbnail'), $fileName);
@@ -197,15 +170,15 @@ class ProductController extends Controller
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-       
+
         // dd($productId);
         // Handle multiple images upload
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
 
-                $imageName = preg_replace('/[^A-Za-z0-9_\-]/', '_', strtolower($name)) 
-                            . '_' . time() 
-                            . '_' . rand(1000,9999) 
+                $imageName = preg_replace('/[^A-Za-z0-9_\-]/', '_', strtolower($name))
+                            . '_' . time()
+                            . '_' . rand(1000,9999)
                             . '.' . $image->getClientOriginalExtension();
 
                 $imagePath = 'images/product_images/' . $imageName;
@@ -234,7 +207,7 @@ class ProductController extends Controller
             }
             DB::table('product_variants')->insert($variants);
         }
-        
+
         // dd($request->all());
 
 
@@ -255,7 +228,7 @@ class ProductController extends Controller
         if (!$product) {
             return response()->json(['success' =>false,'message'=> 'Product not found !']);
         }
-        
+
         DB::table('products')->where('id', $id)->update([
             'status' => $request->status,
             'updated_at' => now(),

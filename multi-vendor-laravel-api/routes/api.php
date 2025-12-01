@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\VendorRequestController;
 use Illuminate\Http\Request;
@@ -23,4 +24,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/vendors-info', [VendorRequestController::class, 'vendorStatusSummary']);
     Route::patch('/vendor-requests/{id}/status', [VendorRequestController::class, 'updateStatus']);
     Route::get('/vendor/details/{id}', [VendorRequestController::class, 'show']);
+
+    //product
+    Route::get('products', [ProductController::class, 'index']);
+    Route::get('products/search', [ProductController::class, 'search']);
+    Route::get('products/{id}', [ProductController::class, 'show']);
+    Route::post('products', [ProductController::class, 'store']);
+    Route::post('products/{id}/status', [ProductController::class, 'updateStatus']);
 });
