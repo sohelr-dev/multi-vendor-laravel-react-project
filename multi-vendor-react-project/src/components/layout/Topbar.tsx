@@ -7,7 +7,7 @@ function Topbar() {
       <div className="container-fluid d-flex align-items-center flex-nowrap">
         <label
           htmlFor="sidebar-toggle"
-          className="cursor-pointer d-md-none me-2"
+          className="cursor-pointer d-lg-none me-2"
         >
           <i className="fa-solid fa-bars-staggered fa-fade fa-lg"></i>
         </label>

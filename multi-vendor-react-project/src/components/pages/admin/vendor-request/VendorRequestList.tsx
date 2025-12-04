@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import api from "../../../../config";
+import api, { baseUrl } from "../../../../config";
 
 function VendorRequestList() {
   const [requests, setRequests] = useState<any[]>([]);

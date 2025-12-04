@@ -23,6 +23,9 @@ import OrderDetails from './components/pages/admin/orders/OrderDetails.jsx'
 import PendingOrders from './components/pages/admin/orders/pendingOrder/pendingOrder.tsx'
 import CompleteOrders from './components/pages/admin/orders/completeOrder/CompleteOrder.tsx'
 import VendorDashboard from './components/pages/vendors/VendorDashboard.tsx'
+import CreateProductVendor from './components/pages/admin/products/CreateProductVendor.tsx'
+import CreateVendorShop from './components/pages/auth/VendorRegistration.tsx'
+import VendorRegistration from './components/pages/auth/VendorRegistration.tsx'
 
 /*const {user} = useAuth();
 const role = user?.role_id */
@@ -37,9 +40,8 @@ const role = user?.role_id */
 const AppRouter = createBrowserRouter([
   { path: "/", element: <App />,
     children: [
-      { path: "dashboard", element:<ProtectedRoute><Dashboard/></ProtectedRoute>
-
-      },
+      { path: "dashboard", element:<ProtectedRoute><Dashboard/></ProtectedRoute> },
+      { path: "vendor-dashboard", element:<ProtectedRoute><VendorDashboard/></ProtectedRoute> },
       { path: "users", element:<ProtectedRoute><UserList /> </ProtectedRoute> },
       { path: "users/user-details/:id", element:<ProtectedRoute><UserDetails /> </ProtectedRoute> },
       // vendor request
@@ -63,6 +65,7 @@ const AppRouter = createBrowserRouter([
     ]
   },
   { path: "/login", element: <GuestRoute><Login /></GuestRoute> },
+  { path: "/register", element: <GuestRoute><VendorRegistration /></GuestRoute> },
   { path: "/*", element: <Page404 /> },
 ])
 

@@ -5,9 +5,8 @@ function Dashboard() {
   return (
     <>
     <div className="container">
-        <h1>welcome to{user?.role_id} Admin Dashboard</h1>
-        
-         
+        <h1>Welcome to {user?.role_id === 1 ? 'Admin' : 'Vendor'}  Dashboard</h1>
+
         
     </div>
     

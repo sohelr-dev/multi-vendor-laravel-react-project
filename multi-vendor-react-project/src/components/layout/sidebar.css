@@ -68,3 +68,24 @@ body {
   }
   
 }
+
+@media(max-width: 1024px){
+    #sidebar {
+        left: -280px !important;
+    }
+
+    #sidebar-toggle:checked ~ #sidebar {
+        left: 0 !important;
+    }
+
+    /* overlay for tablet */
+    #sidebar-toggle:checked ~ .bg-layer {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1990;
+    }
+}

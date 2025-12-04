@@ -37,7 +37,7 @@ function Sidebar() {
       <label htmlFor="sidebar-toggle" className="bg-layer"></label>
 
       <div id="sidebar">
-        <span className="fs-2 d-md-none" id="close-btn">
+        <span className="fs-2 d-lg-none" id="close-btn">
           <label htmlFor="sidebar-toggle">
             <i className="fas fa-chevron-left text-light"></i>
           </label>
